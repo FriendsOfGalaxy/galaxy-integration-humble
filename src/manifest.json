@@ -7,5 +7,6 @@
     "author": "Mesco",
     "email": "mieszkoziemowit@gmail.com",
     "url": "https://github.com/UncleGoogle/galaxy-integration-humblebundle/",
-    "script": "plugin.py"
+    "script": "plugin.py",
+    "update_url": "https://raw.githubusercontent.com/FriendsOfGalaxy/galaxy-integration-humble/master/current_version.json",
 }
