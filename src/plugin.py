@@ -19,14 +19,20 @@ from galaxy.api.types import Authentication, NextStep, LocalGame
 from galaxy.api.errors import AuthenticationRequired, InvalidCredentials
 
 from consts import HP
-from version import __version__
 from settings import Settings
 from webservice import AuthorizedHumbleAPI
 from model.game import TroveGame, Key, Subproduct
 from humbledownloader import HumbleDownloadResolver
 from library import LibraryResolver
 from local import AppFinder
+from privacy import SensitiveFilter
 
+
+with open(pathlib.Path(__file__).parent / 'manifest.json') as f:
+    __version__ = json.load(f)['version']
+
+logger = logging.getLogger()
+logger.addFilter(SensitiveFilter())
 
 sentry_logging = LoggingIntegration(
     level=logging.INFO,
@@ -140,7 +146,8 @@ class HumbleBundlePlugin(Plugin):
                 process = await asyncio.create_subprocess_exec(sys.executable, *args, stderr=asyncio.subprocess.PIPE)
                 _, stderr_data = await process.communicate()
                 if stderr_data:
-                    logging.error(f'Error for keygui: stderr_data', extra=args)
+                    logging.error(f'Error for keygui: {stderr_data}', extra={'guiargs': args[:-1]})
+                    webbrowser.open('https://www.humblebundle.com/home/keys')  # fallback to browser
                 return
 
             chosen_download = self._download_resolver(game)
@@ -152,7 +159,7 @@ class HumbleBundlePlugin(Plugin):
                     url = await self._api.get_trove_sign_url(chosen_download, game.machine_name)
                 except AuthenticationRequired:
                     logging.info('Looks like your Humble Monthly subscription has expired. Refer to config.ini to manage showed games.')
-                    webbrowser.open('https://www.humblebundle.com/monthly/subscriber')
+                    webbrowser.open('https://www.humblebundle.com/subscription/home')
                 else:
                     webbrowser.open(url['signed_url'])
 
@@ -176,7 +183,7 @@ class HumbleBundlePlugin(Plugin):
             logging.error(e, extra={'local_games': self._local_games})
         else:
             game.uninstall()
-    
+
     async def get_os_compatibility(self, game_id: str, context: Any) -> Optional[OSCompatibility]:
         try:
             game = self._owned_games[game_id]
