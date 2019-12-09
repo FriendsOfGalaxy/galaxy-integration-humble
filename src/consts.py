@@ -1,7 +1,6 @@
 import enum
 import platform
 import sys
-import typing
 
 
 class PlatformNotSupported(Exception):
@@ -14,6 +13,7 @@ class KEY_TYPE(enum.Enum):
     UPLAY = 'uplay'
     EPIC = 'epic'  # not sure about it
     BATTLENET = 'battlenet'  # not sure about it
+    GOG = 'gog'  # not sure about it
 
 
 class SOURCE(enum.Enum):
@@ -36,6 +36,8 @@ class HP(enum.Enum):
     AUDIO = 'audio'
     EBOOK = 'ebook'
     ASMJS = 'asmjs'
+    VIDEO = 'video'
+    COMEDY = 'comedy'
 
     def __eq__(self, other):
         if type(other) == str:
@@ -47,10 +49,7 @@ class HP(enum.Enum):
 
 
 GAME_PLATFORMS = set([HP.WINDOWS, HP.MAC, HP.LINUX])
-DLC_PLATFORMS = set([HP.AUDIO, HP.EBOOK])  # TODO push those with base game when DLC is supported
-
 NON_GAME_BUNDLE_TYPES = {'mobilebundle', 'softwarebundle', 'bookbundle', 'audiobookbundle', 'comicsbundle', 'rpgbookbundle', 'mangabundle'}
-FREE_GAME_TYPES = {'freegame', 'free'}
 
 if sys.platform == 'win32':
     CURRENT_SYSTEM = HP.WINDOWS
@@ -58,6 +57,9 @@ elif sys.platform == 'darwin':
     CURRENT_SYSTEM = HP.MAC
 else:
     raise PlatformNotSupported('GOG Galaxy 2.0 supports only Windows and macos for now')
+
+IS_WINDOWS = HP.WINDOWS == CURRENT_SYSTEM
+IS_MAC = HP.MAC == CURRENT_SYSTEM
 
 if platform.machine().endswith('64'):
     CURRENT_BITNESS = BITNESS.B64
