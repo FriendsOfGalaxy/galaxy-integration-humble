@@ -5,7 +5,7 @@ from typing import Callable, Dict, List, Set, Iterable, Any, Coroutine
 
 from consts import SOURCE, NON_GAME_BUNDLE_TYPES, GAME_PLATFORMS
 from model.product import Product
-from model.game import HumbleGame, Subproduct, TroveGame, Key
+from model.game import HumbleGame, Subproduct, TroveGame, Key, KeyGame
 from settings import LibrarySettings
 
 
@@ -31,8 +31,7 @@ class LibraryResolver:
                 all_games.extend(self._get_subproducts(orders))
             elif source == SOURCE.TROVE:
                 all_games.extend(self._get_trove_games(
-                    self._cache.get('troves', []) + self._cache.get('troves_recent', [])
-                ))
+                    self._cache.get('troves', []) + self._cache.get('troves_recent', [])))
             elif source == SOURCE.KEYS:
                 all_games.extend(self._get_keys(orders, self._settings.show_revealed_keys))
 
@@ -166,7 +165,7 @@ class LibraryResolver:
         return trove_games
 
     @staticmethod
-    def _get_keys(orders: list, show_revealed_keys: bool) -> List[Key]:
+    def _get_keys(orders: list, show_revealed_keys: bool) -> List[KeyGame]:
         keys = []
         for details in orders:
             for tpks in details['tpkd_dict']['all_tpks']:
@@ -176,5 +175,5 @@ class LibraryResolver:
                     logging.error(f"Error while parsing tpks {repr(e)}: {tpks}", extra={'tpks': tpks})
                 else:
                     if key.key_val is None or show_revealed_keys:
-                        keys.append(key)
+                        keys.extend(key.key_games)
         return keys
