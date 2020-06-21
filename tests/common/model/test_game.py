@@ -1,5 +1,5 @@
 from model.game import Subproduct, Key, KeyGame
-from consts import GAME_PLATFORMS, HP
+from model.types import GAME_PLATFORMS, HP
 
 
 def test_game_properties_overgrowth(overgrowth):
@@ -8,9 +8,9 @@ def test_game_properties_overgrowth(overgrowth):
         sub.human_name
         sub.machine_name
         sub.license
-        for platform, download_structs in sub.downloads.items():
+        for platform, download in sub.downloads.items():
             assert platform in set(HP)
-            for dw_struct in download_structs:
+            for dw_struct in download.download_struct:
                 dw_struct.web
                 dw_struct.bittorrent
                 dw_struct.human_size
@@ -24,9 +24,9 @@ def test_game_properties_access(orders):
             sub.human_name
             sub.machine_name
             sub.license
-            for platform, download_structs in sub.downloads.items():
+            for platform, download in sub.downloads.items():
                 assert platform in set(HP)
-                for dw_struct in download_structs:
+                for dw_struct in download.download_struct:
                     dw_struct.web
                     dw_struct.bittorrent
                     dw_struct.human_size
