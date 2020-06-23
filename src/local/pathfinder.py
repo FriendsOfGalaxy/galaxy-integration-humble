@@ -5,12 +5,10 @@ from pathlib import Path, PurePath
 from typing import List, Union, Sequence, Optional
 from typing import cast
 
-from consts import HP
-
 
 class PathFinder:
-    def __init__(self, system: HP):
-        self.system = system
+    def __init__(self, is_windows: bool):
+        self.is_windows = is_windows
 
     def find_executables(self, path: Union[str, PurePath]) -> List[str]:
         folder = Path(path)
@@ -23,10 +21,11 @@ class PathFinder:
                 whole_path = os.path.join(root, path)
                 if self.is_exe(whole_path):
                     execs.append(whole_path)
+            break
         return execs
 
     def is_exe(self, path: str) -> bool:
-        if self.system == HP.WINDOWS:
+        if self.is_windows:
             return path.endswith('.exe')
         else:
             return os.access(path, os.X_OK)

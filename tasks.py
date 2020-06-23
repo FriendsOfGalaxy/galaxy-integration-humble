@@ -6,7 +6,6 @@ import os
 import subprocess
 import shutil
 from pathlib import Path
-from glob import glob
 
 from invoke import task
 import github
@@ -68,7 +67,7 @@ def build(c, output=DIST_PLUGIN):
         try:
             shutil.rmtree(output)
         except OSError as e:
-            if hasattr(e, 'winerror') and e.winerror in [145, 5]:
+            if hasattr(e, 'winerror') and e.winerror in [145, 5]:  # type: ignore
                 # something e.g. antivirus check holds a file. Try to wait to be released for a moment
                 time.sleep(3)
                 shutil.rmtree(output)
@@ -126,17 +125,23 @@ def debug(c, output=DIST_PLUGIN, deps=False):
     print("Now, click 'retry' for crashed plugin in Settings")
 
 
+def recursive_overwrite(src, dest):
+    if os.path.isdir(src):
+        if not os.path.isdir(dest):
+            os.makedirs(dest)
+        files = os.listdir(src)
+        for f in files:
+            recursive_overwrite(
+                os.path.join(src, f),
+                os.path.join(dest, f)
+            )
+    else:
+        shutil.copyfile(src, dest)
+
 @task
-def copy(c, output=DIST_PLUGIN, galaxy_path=GALAXY_PATH):
+def copy(c, output=DIST_PLUGIN):
     print('copying source code ...')
-    for file_ in glob("src/*.py"):
-        shutil.copy(file_, output)
-    for file_ in glob("src/local/*.py"):
-        shutil.copy(file_, Path(output) / 'local')
-    for file_ in glob("src/gui/*.py"):
-        shutil.copy(file_, Path(output) / 'gui')
-    for file_ in glob("src/*.ini"):
-        shutil.copy(file_, output)
+    recursive_overwrite('src', output)
 
 
 @task

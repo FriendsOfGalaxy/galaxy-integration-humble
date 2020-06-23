@@ -18,6 +18,12 @@ class AsyncMock(MagicMock):
         return super(AsyncMock, self).__call__(*args, **kwargs)
 
 
+async def aiter(seq):
+    """Helper for mocking asynchonous generators"""
+    for item in seq:
+        yield item
+
+
 @pytest.fixture
 def delayed_fn():
     async def fn(delay, awaitable, *args, **kwargs):
@@ -31,7 +37,7 @@ def settings(mocker):
     mocker.patch('plugin.Settings._load_config_file')
     mock = Settings()
     mock.save_config = Mock()
-    return mock 
+    return mock
 
 
 @pytest.fixture
@@ -40,10 +46,17 @@ def api_mock_raw():
     mock.authenticate = AsyncMock()
     mock.get_order_details = AsyncMock()
     mock.get_gamekeys = AsyncMock()
-    mock.had_trove_subscription = AsyncMock()
-    mock.get_trove_sign_url = AsyncMock()
+    mock.get_montly_trove_data = AsyncMock()
+    mock.had_subscription = AsyncMock()
     mock.get_trove_details = AsyncMock()
+    mock.sign_url_trove = AsyncMock()
+    mock.sign_url_subproduct = AsyncMock()
     mock.close_session = AsyncMock()
+    mock.get_choice_content_data = AsyncMock()
+    mock.get_choice_month_details = AsyncMock(return_value=MagicMock())
+    mock.get_choice_marketing_data = AsyncMock(return_value=MagicMock())
+    mock.get_subscription_products_with_gamekeys = AsyncMock(return_value=MagicMock())
+
     return mock
 
 
@@ -62,14 +75,14 @@ def api_mock(api_mock_raw, orders_keys, get_troves):
     mock.TROVES_PER_CHUNK = 20
     mock.get_gamekeys.return_value = [i['gamekey'] for i in mock.orders]
     mock.get_order_details.side_effect = get_details
-    mock.had_trove_subscription.return_value = True
+    mock.had_subscription.return_value = True
     mock.get_trove_details.side_effect = lambda from_chunk: get_troves(from_chunk)
 
     return mock
 
 
 @pytest.fixture
-async def plugin_mock(api_mock, settings, mocker):
+async def plugin(api_mock, settings, mocker):
     mocker.patch('plugin.AuthorizedHumbleAPI', return_value=api_mock)
     mocker.patch('settings.Settings', return_value=settings)
     plugin = HumbleBundlePlugin(Mock(), Mock(), "handshake_token")
