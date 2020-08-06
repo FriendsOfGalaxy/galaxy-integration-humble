@@ -1,3 +1,14 @@
+## Version 0.9.0
+
+[Added]
+- Importing game sizes #135
+- Info when particular game was added to Trove #134
+
+[Fixed]
+- Getting Trove games #133
+- Loading GUI on Mac by removing non UTF8 character from CHANGELOG @ 9478b62
+
+
 ## Version 0.8.1
 Addressed issues: https://github.com/UncleGoogle/galaxy-integration-humblebundle/milestone/6
 
@@ -35,7 +46,7 @@ https://github.com/UncleGoogle/galaxy-integration-humblebundle#recommended-humbl
 
 [Added]
 - Graphical User Interface for configuration. It can be opened by double clicking "Install" button on any Humble game.
-- Ability to import predefined tags: `Key`, `Unrevealed` and `Trove` to library. This won't add tags for newly appeared games automatically. You have to reimport them manually by going to Settings -> Features -> Import button under "HUMBLE BUNDLE".
+- Ability to import predefined tags: `Key`, `Unrevealed` and `Trove` to library. This won't add tags for newly appeared games automatically. You have to reimport them manually by going to Settings -> Features -> Import button under "HUMBLE BUNDLE".
 - Support for keys containing multiple games at once.
 - Automatic updates to integration downloaded manually from https://github.com/UncleGoogle/galaxy-integration-humblebundle/releases (this is "latest" version channel - new versions come eariler but are less stable than integrtion downloaded via Galaxy)
 
