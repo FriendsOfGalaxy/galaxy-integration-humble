@@ -26,16 +26,15 @@ class AuthorizedHumbleAPI:
     _SUBSCRIPTION_TROVE = 'subscription/trove'
     _SUBSCRIPTION_PRODUCTS = 'api/v1/subscriptions/humble_monthly/subscription_products_with_gamekeys'
     _SUBSCRIPTION_HISTORY = 'api/v1/subscriptions/humble_monthly/history?from_product={}'
-    _TROVE_CHUNK_URL = 'api/v1/trove/chunk?index={}'
+    _TROVE_CHUNK_URL = 'api/v1/trove/chunk?property=popularity&direction=desc&index={}'
     _DOWNLOAD_SIGN = 'api/v1/user/download/sign'
     _HUMBLER_REDEEM_DOWNLOAD = 'humbler/redeemdownload'
 
-    _DEFAULT_PARAMS = {"ajax": "true"}
     _DEFAULT_HEADERS = {
         "Accept": "application/json",
         "Accept-Charset": "utf-8",
         "Keep-Alive": "true",
-        "User-Agent": "Apache-HttpClient/UNAVAILABLE (java 1.4)"
+        "User-Agent": "HumbleBundle plugin for GOG Galaxy 2.0"
     }
 
     def __init__(self):
@@ -48,8 +47,6 @@ class AuthorizedHumbleAPI:
     async def _request(self, method, path, *args, **kwargs):
         url = self._AUTHORITY + path
         logging.debug(f'{method}, {url}, {args}, {kwargs}')
-        if 'params' not in kwargs:
-            kwargs['params'] = self._DEFAULT_PARAMS
         with handle_exception():
             return await self._session.request(method, url, *args, **kwargs)
 
