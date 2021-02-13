@@ -1,7 +1,13 @@
+## Version 0.9.4
+(!) WARNING: If you're Humble subscriber, plugin reconnection is needed to sync subscriptions again (!)
+
+[Fixed]
+- Plugin being offline for subscribers and no subscriptions shown in Settings->Features #151
+
 ## Version 0.9.3
 
 [Fixed]
-- Show choices before pasued months #148
+- Showing choices before pasued months #148
 
 ## Version 0.9.2
 
@@ -13,7 +19,6 @@
 
 [Fixed]
 - Showing subscriptions #136
-
 ## Version 0.9.0
 
 [Added]
