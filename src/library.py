@@ -142,8 +142,8 @@ class LibraryResolver:
             return False
         if ', ' not in key.human_name:
             return False
-        for i in blacklist:
-            if i in key.human_name:
+        for i in map(str.casefold, blacklist):
+            if i in key.human_name.casefold():
                 logger.debug(f'{key} split blacklisted by "{i}"')
                 return False
         return True
@@ -153,10 +153,14 @@ class LibraryResolver:
         """Extract list of KeyGame objects from single Key"""
         logger.info(f'Spliting {key}')
         names = key.human_name.split(', ')
-        return [
-            KeyGame(key, f'{key.machine_name}_{i}', name)
-            for i, name in enumerate(names)
-        ]
+        games = []
+
+        for i, name in enumerate(names):
+            # Multi-game packs have the word "and" in front of the last game name
+            first, _, rest = name.partition(" ")
+            if first == "and": name = rest or first
+            games.append(KeyGame(key, f'{key.machine_name}_{i}', name))
+        return games
 
     @staticmethod
     def _get_key_infos(orders: list) -> List[KeyInfo]:

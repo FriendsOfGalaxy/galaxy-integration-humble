@@ -112,7 +112,7 @@ class Options(BaseApp):
             SOURCE.KEYS: "Game keys to be redeemed in foreign services like Steam or Origin."
         }
         show_revealed_help = 'Check to show all game keys as separate games.\n' \
-            'Uncheck to show only game keys that are already revealed\n' \
+            'Uncheck to show only game keys that are not revealed yet\n' \
             '(redeemed keys are usually reported by other Galaxy plugins).'
 
         description = toga.Label(desc, style=Pack(font_size=self.TEXT_SIZE_BIG, padding_bottom=12))
@@ -174,7 +174,7 @@ class Options(BaseApp):
         labels = [
             toga.Label("Galaxy integration for HumbleBundle", style=lbl_style),
             LinkLabel("https://github.com/UncleGoogle/galaxy-integration-humblebundle", style=lbl_style),
-            toga.Label("Copyright (C) 2019 UncleGoogle", style=lbl_style)
+            toga.Label("Copyright (C) 2019-2021 UncleGoogle", style=lbl_style)
         ]
         box = toga.Box(children=labels)
         box.style.padding = (self.SIZE[1] // 4, self.SIZE[1] // 4)
